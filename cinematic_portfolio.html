@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gaddam Gowri Priya | Full-Stack Developer & AI Application Builder</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Space Grotesk, Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['Fira Code', 'monospace']
+          },
+          colors: {
+            obsidian: {
+              950: '#050508',
+              900: '#07070d',
+              850: '#0b0c16',
+              800: '#111222',
+              750: '#171930',
+              700: '#1f2242'
+            },
+            cyan: {
+              400: '#22d3ee',
+              500: '#06b6d4',
+            },
+            violet: {
+              500: '#8b5cf6',
+              600: '#7c3aed'
+            },
+            emerald: {
+              400: '#34d399',
+              500: '#10b981'
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float-slow': 'float 7s ease-in-out infinite',
+            'float-reverse': 'floatRev 8s ease-in-out infinite',
+            'radar': 'radarPulse 2.5s ease-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            floatRev: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(10px)' },
+            },
+            radarPulse: {
+              '0%': { transform: 'scale(0.95)', opacity: '0.8' },
+              '100%': { transform: 'scale(2.2)', opacity: '0' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Obsidian Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07070d;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #171930;
+      border-radius: 4px;
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8b5cf6;
+    }
+
+    /* Glassmorphism Styles */
+    .glass-panel {
+      background: rgba(11, 12, 22, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-panel:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 16px 36px -12px rgba(139, 92, 246, 0.2);
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Gradients & Glows */
+    .gradient-hero-text {
+      background: linear-gradient(135deg, #ffffff 15%, #cbd5e1 45%, #a78bfa 75%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .gradient-accent {
+      background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 60%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .neon-glow-cyan {
+      box-shadow: 0 0 25px -4px rgba(6, 182, 212, 0.35);
+    }
+    .neon-glow-violet {
+      box-shadow: 0 0 25px -4px rgba(139, 92, 246, 0.35);
+    }
+
+    /* Canvas background */
+    #ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Code Terminal syntax look */
+    .token-kw { color: #f43f5e; }
+    .token-def { color: #38bdf8; }
+    .token-fn { color: #818cf8; }
+    .token-str { color: #34d399; }
+    .token-cmt { color: #64748b; }
+    .token-cls { color: #fbbf24; }
+  </style>
+</head>
+
+<body class="bg-[#050508] text-slate-200 font-sans antialiased selection:bg-purple-600 selection:text-white relative overflow-x-hidden">
+
+  <!-- Interactive Constellation Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- Ambient Light Orbs -->
+  <div class="fixed top-[-10%] left-[-10%] w-[600px] h-[600px] bg-purple-600/12 rounded-full blur-[160px] pointer-events-none z-0"></div>
+  <div class="fixed top-[35%] right-[-10%] w-[550px] h-[550px] bg-cyan-500/12 rounded-full blur-[160px] pointer-events-none z-0"></div>
+  <div class="fixed bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-indigo-700/12 rounded-full blur-[180px] pointer-events-none z-0"></div>
+
+  <!-- Page Root -->
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#050508]/80 border-b border-white/5 transition-all duration-300" id="navbar">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+          
+          <!-- Monogram Logo -->
+          <a href="#" class="group flex items-center gap-3">
+            <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-400 via-indigo-500 to-purple-600 p-[1.5px] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-1">
+              <div class="w-full h-full bg-[#090a14] rounded-[10px] flex items-center justify-center">
+                <span class="font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400 text-lg tracking-wider">GP</span>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-display font-bold text-white text-base tracking-wide group-hover:text-cyan-400 transition-colors">Gaddam Gowri Priya</span>
+              <span class="text-xs text-slate-400 font-mono tracking-tight flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                Full-Stack Developer
+              </span>
+            </div>
+          </a>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center gap-7">
+            <a href="#about" class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">About</a>
+            <a href="#skills" class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Skills</a>
+            <a href="#projects" class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Projects</a>
+            <a href="#focus" class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Focus / Journey</a>
+            <a href="#contact" class="text-sm font-medium text-slate-300 hover:text-cyan-400 transition-colors">Contact</a>
+          </nav>
+
+          <!-- Status & Resume Actions -->
+          <div class="hidden sm:flex items-center gap-4">
+            <!-- Status Pill -->
+            <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-xs font-mono text-emerald-300">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span>Available for Roles</span>
+            </div>
+
+            <!-- Resume Button -->
+            <button onclick="openResumeModal()" 
+                    class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-200 border border-white/10 hover:border-cyan-400/50 text-xs font-medium font-mono transition-all flex items-center gap-2 group">
+              <i class="fa-solid fa-file-arrow-down text-cyan-400 group-hover:translate-y-0.5 transition-transform"></i>
+              <span>Resume</span>
+            </button>
+
+            <!-- Contact CTA -->
+            <a href="#contact" class="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white text-xs font-semibold tracking-wide shadow-lg shadow-purple-600/25 transition-all duration-300 active:scale-95">
+              Hire Me
+            </a>
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button id="mobile-toggle" aria-label="Toggle Navigation" class="md:hidden p-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-white">
+            <i class="fa-solid fa-bars text-lg" id="menu-icon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="hidden md:hidden border-b border-white/10 bg-[#07070d]/95 backdrop-blur-2xl px-6 py-6 space-y-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-xs font-mono text-emerald-300 mb-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>Available for Roles</span>
+        </div>
+        <a href="#about" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-nav-link">About</a>
+        <a href="#skills" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-nav-link">Skills</a>
+        <a href="#projects" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-nav-link">Projects</a>
+        <a href="#focus" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-nav-link">Focus / Journey</a>
+        <a href="#contact" class="block text-slate-300 hover:text-cyan-400 font-medium py-1 mobile-nav-link">Contact</a>
+        
+        <div class="flex items-center gap-3 pt-3 border-t border-white/10">
+          <button onclick="openResumeModal()" class="flex-1 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-cyan-300 text-center">
+            View Resume
+          </button>
+          <a href="#contact" class="flex-1 text-center py-2 rounded-lg bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-medium text-xs mobile-nav-link">
+            Get In Touch
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-[92vh] flex items-center justify-center pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        
+        <!-- Left Hero Column -->
+        <div class="lg:col-span-7 text-left space-y-7">
+          
+          <!-- Badge Pill -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/40 border border-purple-500/30 text-xs sm:text-sm text-purple-200">
+            <span class="text-amber-400">✨</span>
+            <span>Open to Internships & Full-Time Roles</span>
+            <span class="text-slate-500">|</span>
+            <span class="text-slate-300 text-xs font-mono"><i class="fa-solid fa-location-dot text-cyan-400 mr-1"></i>Madanapalle / Bangalore, India</span>
+          </div>
+
+          <!-- Headline & Rotating Subtitle -->
+          <div class="space-y-3">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-display tracking-tight leading-[1.12]">
+              Hi, I'm <br class="hidden sm:inline" />
+              <span class="text-white">Gaddam Gowri Priya</span>
+            </h1>
+            <div class="text-2xl sm:text-3xl font-display font-extrabold gradient-hero-text">
+              Full-Stack Developer
+            </div>
+
+            <!-- Rotating Dynamic Typewriter -->
+            <div class="text-lg sm:text-xl font-mono text-slate-300 flex items-center min-h-[36px] pt-1">
+              <span class="text-cyan-400 mr-2 font-bold">&gt;</span>
+              <span id="typewriter-output" class="text-cyan-300 font-semibold"></span>
+              <span class="inline-block w-2.5 h-6 ml-1 bg-cyan-400 animate-pulse"></span>
+            </div>
+          </div>
+
+          <!-- Tagline -->
+          <p class="text-base sm:text-lg text-slate-300/90 leading-relaxed max-w-2xl font-light">
+            "Turning ideas into intelligent, scalable, and user-friendly applications through clean code and innovative technology."
+          </p>
+
+          <!-- Core Capability Badges -->
+          <div class="flex flex-wrap gap-2.5 pt-1">
+            <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-purple-300 flex items-center gap-1.5">
+              <i class="fa-brands fa-python text-yellow-400"></i> Python 3.x
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-cyan-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-teal-400"></i> FastAPI
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-indigo-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-brain text-purple-400"></i> Pydantic AI
+            </span>
+            <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-xs font-mono text-emerald-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-database text-emerald-400"></i> PostgreSQL / SQL
+            </span>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-wrap items-center gap-4 pt-3">
+            <a href="https://github.com/gowripriya521" target="_blank" rel="noopener noreferrer" 
+               class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 text-white font-medium text-sm tracking-wide shadow-lg shadow-purple-600/30 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2">
+              <i class="fab fa-github text-base"></i>
+              <span>Explore My GitHub</span>
+            </a>
+
+            <a href="#contact" 
+               class="px-6 py-3.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 text-slate-200 border border-white/10 hover:border-purple-400/50 font-medium text-sm tracking-wide transition-all flex items-center gap-2">
+              <i class="fa-regular fa-paper-plane text-purple-400"></i>
+              <span>Get In Touch</span>
+            </a>
+
+            <button onclick="openResumeModal()" 
+               class="px-5 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 hover:border-cyan-400/50 font-medium text-sm font-mono tracking-wide transition-all flex items-center gap-2 group">
+              <i class="fa-solid fa-file-arrow-down text-cyan-400 group-hover:translate-y-0.5 transition-transform"></i>
+              <span>Download Resume</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Hero Column: Futuristic Live Terminal / Architecture Card -->
+        <div class="lg:col-span-5 relative flex justify-center items-center">
+          
+          <!-- Outer Ambient Glow Ring -->
+          <div class="absolute -inset-2 bg-gradient-to-r from-cyan-500/20 via-purple-600/20 to-pink-500/20 rounded-3xl blur-2xl opacity-60"></div>
+
+          <!-- Interactive Terminal Window -->
+          <div class="relative w-full max-w-lg rounded-2xl glass-panel border border-white/15 overflow-hidden shadow-2xl font-mono text-xs">
+            
+            <!-- Terminal Header -->
+            <div class="px-4 py-3 bg-[#080913] border-b border-white/10 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                <span class="ml-2 text-slate-400 text-[11px]">gowri_priya_agent.py</span>
+              </div>
+              <div class="flex items-center gap-2 text-[10px] text-cyan-400 bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-500/30">
+                <i class="fa-solid fa-bolt"></i> FASTAPI + PYDANTIC AI
+              </div>
+            </div>
+
+            <!-- Terminal Code Body -->
+            <div class="p-5 space-y-2 bg-[#090a14]/90 overflow-x-auto text-[12px] leading-relaxed">
+              <p class="token-cmt"># Autonomous AI Agent Definition</p>
+              <p><span class="token-kw">from</span> fastapi <span class="token-kw">import</span> FastAPI, Depends</p>
+              <p><span class="token-kw">from</span> pydantic <span class="token-kw">import</span> BaseModel</p>
+              <p><span class="token-kw">from</span> pydantic_ai <span class="token-kw">import</span> Agent</p>
+              <p><span class="token-kw">from</span> pydantic_ai.models.gemini <span class="token-kw">import</span> GeminiModel</p>
+              <br>
+              <p><span class="token-kw">class</span> <span class="token-cls">EngineerProfile</span>(BaseModel):</p>
+              <p class="pl-4">name: <span class="token-def">str</span> = <span class="token-str">"Gaddam Gowri Priya"</span></p>
+              <p class="pl-4">role: <span class="token-def">str</span> = <span class="token-str">"Full-Stack & Backend Dev"</span></p>
+              <p class="pl-4">skills: <span class="token-def">list</span>[<span class="token-def">str</span>] = [<span class="token-str">"FastAPI"</span>, <span class="token-str">"Pydantic AI"</span>, <span class="token-str">"SQL"</span>]</p>
+              <p class="pl-4">status: <span class="token-def">str</span> = <span class="token-str">"Ready to Build & Scale"</span></p>
+              <br>
+              <p>app = FastAPI(title=<span class="token-str">"GP Portfolio API"</span>)</p>
+              <p>priya_agent = Agent(model=<span class="token-str">"gemini-2.0"</span>, result_type=EngineerProfile)</p>
+              <br>
+              <p class="token-cmt"># Dynamic Tool Call Execution</p>
+              <p>@priya_agent.tool</p>
+              <p><span class="token-kw">async def</span> <span class="token-fn">deploy_scalable_solution</span>(goal: <span class="token-def">str</span>) -&gt; <span class="token-def">dict</span>:</p>
+              <p class="pl-4"><span class="token-kw">return</span> {<span class="token-str">"action"</span>: <span class="token-str">"Delivered clean, validated code"</span>, <span class="token-str">"quality"</span>: <span class="token-str">"100%"</span>}</p>
+            </div>
+
+            <!-- Terminal Interactive Status Bar -->
+            <div class="px-4 py-2.5 bg-[#07070d] border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span class="text-emerald-300">FastAPI Server: ONLINE</span>
+              </div>
+              <div class="text-slate-500">PORT: 8000 &bull; UTF-8</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scroll Down Trigger -->
+      <a href="#about" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center text-slate-400 hover:text-cyan-400 transition-colors">
+        <span class="text-[11px] uppercase tracking-widest font-mono mb-1">Explore</span>
+        <i class="fa-solid fa-chevron-down text-xs animate-bounce"></i>
+      </a>
+    </section>
+
+    <!-- KEY METRICS STATS BAR -->
+    <section class="py-12 border-y border-white/5 bg-obsidian-900/60 relative">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          
+          <!-- Metric 1 -->
+          <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-cyan-400 hover:scale-[1.02] transition-transform">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono uppercase text-slate-400">Education</span>
+              <i class="fa-solid fa-graduation-cap text-cyan-400 text-lg"></i>
+            </div>
+            <div class="text-3xl font-extrabold font-display text-white">B.Tech</div>
+            <p class="text-xs text-cyan-300/80 font-mono mt-1">Engineering Graduate</p>
+          </div>
+
+          <!-- Metric 2 -->
+          <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-purple-500 hover:scale-[1.02] transition-transform">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono uppercase text-slate-400">Core Tech</span>
+              <i class="fa-solid fa-layer-group text-purple-400 text-lg"></i>
+            </div>
+            <div class="text-3xl font-extrabold font-display text-white">6+</div>
+            <p class="text-xs text-purple-300/80 font-mono mt-1">Python, FastAPI, AI Stack</p>
+          </div>
+
+          <!-- Metric 3 -->
+          <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-emerald-400 hover:scale-[1.02] transition-transform">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono uppercase text-slate-400">Focus</span>
+              <i class="fa-solid fa-robot text-emerald-400 text-lg"></i>
+            </div>
+            <div class="text-3xl font-extrabold font-display text-white">Backend & AI</div>
+            <p class="text-xs text-emerald-300/80 font-mono mt-1">APIs & Agentic Workflows</p>
+          </div>
+
+          <!-- Metric 4 -->
+          <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-amber-400 hover:scale-[1.02] transition-transform">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-mono uppercase text-slate-400">Code Standard</span>
+              <i class="fa-solid fa-shield-check text-amber-400 text-lg"></i>
+            </div>
+            <div class="text-3xl font-extrabold font-display text-white">100%</div>
+            <p class="text-xs text-amber-300/80 font-mono mt-1">Type-Safe & Validated</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT SECTION & ENGINEERING PHILOSOPHY -->
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 relative">
+      <div class="max-w-6xl mx-auto space-y-16">
+        
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-400">
+            <i class="fa-solid fa-code"></i> PHILOSOPHY & BACKGROUND
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-display">About <span class="gradient-accent">Gowri Priya</span></h2>
+          <div class="w-16 h-1 bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+          
+          <!-- Story Narrative -->
+          <div class="lg:col-span-7 glass-panel p-8 rounded-2xl space-y-6">
+            <h3 class="text-2xl font-bold font-display text-white leading-snug">
+              Building Intelligent, Scalable & Resilient Web Solutions
+            </h3>
+            
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              Hello! I'm <strong class="text-white">Gaddam Gowri Priya</strong>, a passionate Full-Stack Developer with a <strong class="text-cyan-400">B.Tech engineering background</strong>. I thrive at the intersection of scalable backend web architectures, relational database modeling, and next-generation artificial intelligence agents.
+            </p>
+
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              My core toolkit revolves around <strong class="text-purple-300">Python</strong>, <strong class="text-cyan-300">FastAPI</strong>, <strong class="text-amber-300">Pydantic</strong>, and <strong class="text-emerald-300">Pydantic AI</strong>, complemented by frontend fundamentals in HTML5, modern CSS3, and JavaScript. Whether creating structured REST APIs, implementing robust CRUD operations, or crafting autonomous AI tool-calling workflows, I focus on delivering real-world utility.
+            </p>
+
+            <!-- Engineering Philosophy Callout -->
+            <div class="p-5 rounded-xl bg-purple-950/20 border border-purple-500/20 space-y-2">
+              <div class="flex items-center gap-2 text-purple-300 text-sm font-bold font-mono">
+                <i class="fa-solid fa-compass-drafting"></i> My Engineering Philosophy:
+              </div>
+              <p class="text-xs sm:text-sm text-slate-300 italic font-sans leading-relaxed">
+                "Write clean, maintainable, and type-safe code; embrace continuous learning of emerging tech stacks; and transform real-world complex problems into intuitive, practical software."
+              </p>
+            </div>
+
+            <!-- Focus Highlights -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
+              <div class="p-3 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2">
+                <i class="fa-solid fa-arrows-split-up-and-left text-cyan-400"></i>
+                <span class="text-slate-300">Async Execution</span>
+              </div>
+              <div class="p-3 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-purple-400"></i>
+                <span class="text-slate-300">Schema Validation</span>
+              </div>
+              <div class="p-3 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i>
+                <span class="text-slate-300">AI Tool Calling</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Architecture / Quick Facts Card -->
+          <div class="lg:col-span-5 glass-panel p-8 rounded-2xl flex flex-col justify-between space-y-6">
+            <div>
+              <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <span class="font-display font-bold text-white text-base">Engineer Profile</span>
+                <span class="text-xs font-mono text-cyan-400 bg-cyan-950/50 px-2.5 py-1 rounded border border-cyan-500/30">VERIFIED</span>
+              </div>
+
+              <div class="mt-6 space-y-4 font-mono text-xs">
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Full Name</span>
+                  <span class="text-white font-semibold">Gaddam Gowri Priya</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Role</span>
+                  <span class="text-purple-300 font-semibold">Full-Stack & Backend Dev</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Primary Language</span>
+                  <span class="text-yellow-400 font-semibold">Python (Advanced)</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Degree</span>
+                  <span class="text-cyan-400 font-semibold">B.Tech Engineering</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Location Base</span>
+                  <span class="text-slate-300">Madanapalle / Bangalore, IN</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-white/5">
+                  <span class="text-slate-400">Availability</span>
+                  <span class="text-emerald-400 font-semibold">Immediate</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Direct Contact Button on Card -->
+            <div class="pt-4 border-t border-white/10">
+              <a href="#contact" class="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-400/50 text-cyan-300 font-mono text-xs flex items-center justify-center gap-2 transition-all">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
+                <span>Direct Inquiries</span>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CORE SKILLS & TECH STACK MATRIX -->
+    <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-[#06070e]/60 relative">
+      <div class="max-w-6xl mx-auto space-y-16">
+        
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/40 border border-purple-500/30 text-xs font-mono text-purple-300">
+            <i class="fa-solid fa-microchip"></i> TECHNICAL ARSENAL
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-display">Core Skills & <span class="gradient-accent">Tech Stack</span></h2>
+          <p class="text-sm text-slate-400 max-w-xl">Curated stack focused on high-throughput backend services, autonomous agent frameworks, and modern interfaces.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Skill Card 1: Backend & Databases -->
+          <div class="glass-panel p-7 rounded-2xl relative overflow-hidden group">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 text-xl">
+                <i class="fa-solid fa-server"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold font-display text-white">Backend & Databases</h3>
+                <p class="text-xs text-slate-400 font-mono">APIs, Persistence & Data Modeling</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-python text-yellow-400"></i> Python
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-bolt text-teal-400"></i> FastAPI
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-circle-check text-rose-400"></i> Pydantic
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-network-wired text-cyan-400"></i> REST APIs
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-database text-blue-400"></i> SQL (Relational)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-elephant text-sky-400"></i> PostgreSQL
+              </span>
+            </div>
+          </div>
+
+          <!-- Skill Card 2: AI & Intelligent Development -->
+          <div class="glass-panel p-7 rounded-2xl relative overflow-hidden group">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xl">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold font-display text-white">AI & Intelligent Systems</h3>
+                <p class="text-xs text-slate-400 font-mono">Agent Architectures & LLM Tools</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/50 hover:bg-purple-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-robot text-purple-400"></i> Pydantic AI
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/50 hover:bg-purple-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> AI Agent Development
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/50 hover:bg-purple-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-screwdriver-wrench text-cyan-400"></i> Tool Calling
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/50 hover:bg-purple-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-plug text-emerald-400"></i> LLM API Integration
+              </span>
+            </div>
+          </div>
+
+          <!-- Skill Card 3: UI/UX & Tooling -->
+          <div class="glass-panel p-7 rounded-2xl relative overflow-hidden group">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 text-xl">
+                <i class="fa-solid fa-laptop-code"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold font-display text-white">UI/UX & Developer Tools</h3>
+                <p class="text-xs text-slate-400 font-mono">Modern Frontend & Engineering Setup</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-html5 text-orange-500"></i> HTML5
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-css3-alt text-blue-500"></i> CSS3
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-js text-yellow-400"></i> JavaScript
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-git-alt text-orange-600"></i> Git & Version Control
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-brands fa-github text-white"></i> GitHub
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-code text-sky-400"></i> VS Code
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-indigo-400/50 hover:bg-indigo-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-paper-plane text-orange-400"></i> Postman
+              </span>
+            </div>
+          </div>
+
+          <!-- Skill Card 4: Core Competencies -->
+          <div class="glass-panel p-7 rounded-2xl relative overflow-hidden group">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl">
+                <i class="fa-solid fa-sliders"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold font-display text-white">Core Competencies</h3>
+                <p class="text-xs text-slate-400 font-mono">Validation, Testing & Concurrency</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-arrows-rotate text-emerald-400"></i> CRUD Operations
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-shield-halved text-cyan-400"></i> Data Validation
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-vial-circle-check text-purple-400"></i> API Testing
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-clock text-amber-400"></i> Async Tasks (Celery)
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-cubes-stacked text-indigo-400"></i> Backend Architecture
+              </span>
+              <span class="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-950/20 transition-all flex items-center gap-2 text-xs font-medium text-slate-200">
+                <i class="fa-solid fa-lightbulb text-yellow-300"></i> Problem Solving
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FEATURED PROJECTS SHOWCASE -->
+    <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative">
+      <div class="max-w-6xl mx-auto space-y-16">
+        
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-xs font-mono text-cyan-400">
+            <i class="fa-solid fa-cubes"></i> SELECTED SYSTEMS
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-display">Featured <span class="gradient-accent">Architectures</span></h2>
+          <p class="text-sm text-slate-400 max-w-xl">Production-minded implementations exploring autonomous AI tool calling, async workers, and FastAPI services.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          <!-- PROJECT 1: Pydantic AI Autonomous Agent -->
+          <div class="glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group hover:-translate-y-2 transition-all duration-300">
+            <div>
+              <!-- Visual Header -->
+              <div class="h-48 bg-gradient-to-br from-purple-950/80 via-obsidian-850 to-obsidian-900 p-5 relative flex flex-col justify-between border-b border-white/5">
+                <div class="flex items-center justify-between z-10">
+                  <span class="px-2.5 py-1 rounded-md bg-purple-500/20 border border-purple-500/30 text-[11px] font-mono text-purple-300">
+                    AI Agent Engine
+                  </span>
+                  <a href="https://github.com/gowripriya521" target="_blank" class="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center text-slate-300 hover:text-white hover:bg-black/80 transition-colors" title="GitHub Repo">
+                    <i class="fab fa-github"></i>
+                  </a>
+                </div>
+
+                <div class="z-10 flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-purple-600/30 border border-purple-500/40 flex items-center justify-center text-purple-300 text-2xl">
+                    <i class="fa-solid fa-brain"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold font-display text-base group-hover:text-cyan-400 transition-colors">Pydantic AI Autonomous Agent</h4>
+                    <span class="text-xs font-mono text-slate-400">Tool Calling & Context Management</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Body -->
+              <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-300 leading-relaxed">
+                  An intelligent autonomous system using <strong class="text-white">Pydantic AI</strong> designed for schema-enforced tool execution, deterministic output parsing, and dynamic context-aware queries.
+                </p>
+
+                <div class="space-y-1.5 text-xs text-slate-300 font-sans">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-cyan-400 text-[10px]"></i>
+                    <span>Type-safe response modeling via Pydantic</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-purple-400 text-[10px]"></i>
+                    <span>Automated multi-step external tool calling</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                    <span>Asynchronous prompt and payload handling</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="p-6 pt-0 space-y-4">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-purple-300">Pydantic AI</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-yellow-300">Python 3.12</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-cyan-300">REST API</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                <a href="https://github.com/gowripriya521" target="_blank" class="text-xs font-mono text-slate-300 hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
+                  <i class="fab fa-github"></i> View Code
+                </a>
+                <button onclick="openProjectModal('agent')" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                  Inspect Architecture <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT 2: FastAPI High-Performance Async Backend -->
+          <div class="glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group hover:-translate-y-2 transition-all duration-300">
+            <div>
+              <!-- Visual Header -->
+              <div class="h-48 bg-gradient-to-br from-cyan-950/80 via-obsidian-850 to-obsidian-900 p-5 relative flex flex-col justify-between border-b border-white/5">
+                <div class="flex items-center justify-between z-10">
+                  <span class="px-2.5 py-1 rounded-md bg-cyan-500/20 border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
+                    Backend Architecture
+                  </span>
+                  <a href="https://github.com/gowripriya521" target="_blank" class="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center text-slate-300 hover:text-white hover:bg-black/80 transition-colors" title="GitHub Repo">
+                    <i class="fab fa-github"></i>
+                  </a>
+                </div>
+
+                <div class="z-10 flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-cyan-600/30 border border-cyan-500/40 flex items-center justify-center text-cyan-300 text-2xl">
+                    <i class="fa-solid fa-bolt"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold font-display text-base group-hover:text-purple-400 transition-colors">FastAPI High-Performance Backend</h4>
+                    <span class="text-xs font-mono text-slate-400">PostgreSQL & RESTful Microservices</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Body -->
+              <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-300 leading-relaxed">
+                  Scalable backend web service implementing asynchronous database drivers, CRUD endpoints, token verification, and automated Swagger/OpenAPI specifications.
+                </p>
+
+                <div class="space-y-1.5 text-xs text-slate-300 font-sans">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-cyan-400 text-[10px]"></i>
+                    <span>Relational database queries with PostgreSQL</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-purple-400 text-[10px]"></i>
+                    <span>Strict request validation & error middleware</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                    <span>Optimized async endpoints for low latency</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="p-6 pt-0 space-y-4">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-teal-300">FastAPI</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-sky-300">PostgreSQL</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-amber-300">Pydantic</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                <a href="https://github.com/gowripriya521" target="_blank" class="text-xs font-mono text-slate-300 hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
+                  <i class="fab fa-github"></i> View Code
+                </a>
+                <button onclick="openProjectModal('fastapi')" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                  Inspect Architecture <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROJECT 3: Full-Stack Task & Celery Pipeline -->
+          <div class="glass-panel rounded-2xl overflow-hidden flex flex-col justify-between group hover:-translate-y-2 transition-all duration-300">
+            <div>
+              <!-- Visual Header -->
+              <div class="h-48 bg-gradient-to-br from-indigo-950/80 via-obsidian-850 to-obsidian-900 p-5 relative flex flex-col justify-between border-b border-white/5">
+                <div class="flex items-center justify-between z-10">
+                  <span class="px-2.5 py-1 rounded-md bg-indigo-500/20 border border-indigo-500/30 text-[11px] font-mono text-indigo-300">
+                    Full-Stack & Worker System
+                  </span>
+                  <a href="https://github.com/gowripriya521" target="_blank" class="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center text-slate-300 hover:text-white hover:bg-black/80 transition-colors" title="GitHub Repo">
+                    <i class="fab fa-github"></i>
+                  </a>
+                </div>
+
+                <div class="z-10 flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-indigo-300 text-2xl">
+                    <i class="fa-solid fa-arrows-spin"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-white font-bold font-display text-base group-hover:text-cyan-400 transition-colors">Task & Celery Pipeline</h4>
+                    <span class="text-xs font-mono text-slate-400">Async Workers & Responsive UI</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Content Body -->
+              <div class="p-6 space-y-4">
+                <p class="text-sm text-slate-300 leading-relaxed">
+                  An end-to-end task operations portal demonstrating background distributed execution using <strong class="text-white">Celery</strong>, linked with a responsive vanilla JS frontend.
+                </p>
+
+                <div class="space-y-1.5 text-xs text-slate-300 font-sans">
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-cyan-400 text-[10px]"></i>
+                    <span>Background task queues decoupling long jobs</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-purple-400 text-[10px]"></i>
+                    <span>Asynchronous client UI polling & notifications</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i>
+                    <span>Complete CRUD lifecycles with state syncing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="p-6 pt-0 space-y-4">
+              <div class="flex flex-wrap gap-1.5">
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-indigo-300">Python Celery</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-yellow-300">JavaScript</span>
+                <span class="px-2 py-0.5 rounded bg-white/5 text-[11px] font-mono text-emerald-300">FastAPI</span>
+              </div>
+
+              <div class="flex items-center justify-between pt-3 border-t border-white/5">
+                <a href="https://github.com/gowripriya521" target="_blank" class="text-xs font-mono text-slate-300 hover:text-cyan-400 flex items-center gap-1.5 transition-colors">
+                  <i class="fab fa-github"></i> View Code
+                </a>
+                <button onclick="openProjectModal('pipeline')" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+                  Inspect Architecture <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DEVELOPER JOURNEY & CURRENT FOCUS -->
+    <section id="focus" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-[#06070e]/60 relative">
+      <div class="max-w-4xl mx-auto space-y-16">
+        
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-xs font-mono text-emerald-400">
+            <i class="fa-solid fa-road"></i> TRAJECTORY & ROADMAP
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-display">Developer Journey & <span class="gradient-accent">Current Focus</span></h2>
+          <p class="text-sm text-slate-400 max-w-xl">From core computer science foundations to building production-ready FastAPI microservices and AI agent workflows.</p>
+        </div>
+
+        <!-- Timeline Tree -->
+        <div class="relative border-l-2 border-purple-500/30 ml-4 sm:ml-32 space-y-12">
+          
+          <!-- Step 1: Current Focus -->
+          <div class="relative pl-8 sm:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cyan-400 border-4 border-[#06070e] group-hover:scale-125 transition-transform"></div>
+            <div class="hidden sm:block absolute -left-36 top-1 text-xs font-mono text-cyan-400 text-right w-28">Current Focus</div>
+            
+            <div class="glass-panel p-6 rounded-xl space-y-3">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span class="text-base font-bold font-display text-white">Pydantic AI & Agentic Architectures</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-300 font-mono">Active</span>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Deepening hands-on expertise with Pydantic AI for building autonomous agents capable of dynamic tool calling, deterministic response models, and real-time API integrations.
+              </p>
+              <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-1">
+                <span class="text-purple-300">#PydanticAI</span>
+                <span class="text-cyan-300">#ToolCalling</span>
+                <span class="text-emerald-300">#Python3</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: FastAPI & Async Pipelines -->
+          <div class="relative pl-8 sm:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-purple-500 border-4 border-[#06070e] group-hover:scale-125 transition-transform"></div>
+            <div class="hidden sm:block absolute -left-36 top-1 text-xs font-mono text-purple-400 text-right w-28">Active Deep-Dive</div>
+            
+            <div class="glass-panel p-6 rounded-xl space-y-3">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span class="text-base font-bold font-display text-white">FastAPI Microservices & Celery Asynchronous Queues</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs text-purple-300 font-mono">Hands-on</span>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Developing robust REST APIs with FastAPI, relational databases (PostgreSQL/SQL), automated Swagger docs, and integrating Celery for background processing.
+              </p>
+              <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-1">
+                <span class="text-teal-300">#FastAPI</span>
+                <span class="text-amber-300">#Celery</span>
+                <span class="text-sky-300">#PostgreSQL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Full-Stack Foundations -->
+          <div class="relative pl-8 sm:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 border-4 border-[#06070e] group-hover:scale-125 transition-transform"></div>
+            <div class="hidden sm:block absolute -left-36 top-1 text-xs font-mono text-indigo-400 text-right w-28">Full-Stack Core</div>
+            
+            <div class="glass-panel p-6 rounded-xl space-y-3">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span class="text-base font-bold font-display text-white">Interactive Web & API Consumption</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs text-indigo-300 font-mono">Proficient</span>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Creating responsive frontends using HTML5, modern CSS3, and JavaScript, bridging UI state seamlessly with backend REST endpoints and CRUD operations.
+              </p>
+              <div class="flex flex-wrap gap-2 text-xs font-mono text-slate-400 pt-1">
+                <span class="text-yellow-300">#JavaScript</span>
+                <span class="text-orange-300">#HTML5/CSS3</span>
+                <span class="text-emerald-300">#Git</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Academic Engineering Grounding -->
+          <div class="relative pl-8 sm:pl-10 group">
+            <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-emerald-400 border-4 border-[#06070e] group-hover:scale-125 transition-transform"></div>
+            <div class="hidden sm:block absolute -left-36 top-1 text-xs font-mono text-emerald-400 text-right w-28">Education Base</div>
+            
+            <div class="glass-panel p-6 rounded-xl space-y-3">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span class="text-base font-bold font-display text-white">B.Tech Engineering Degree</span>
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 font-mono">Completed</span>
+              </div>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                Rigorous grounding in data structures, algorithms, object-oriented programming, database management systems, and software engineering methodologies.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT & CONNECT SECTION -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 border-t border-white/5 relative">
+      <div class="max-w-6xl mx-auto space-y-16">
+        
+        <!-- Header -->
+        <div class="flex flex-col items-center text-center space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/40 border border-purple-500/30 text-xs font-mono text-purple-300">
+            <i class="fa-regular fa-paper-plane"></i> OPEN COMMUNICATIONS
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold font-display">Let's <span class="gradient-accent">Connect</span></h2>
+          <p class="text-sm text-slate-400 max-w-xl">Available for internships, full-time positions, or technical collaborations. Reach out directly below.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          
+          <!-- Contact Info Column -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="glass-panel p-8 rounded-2xl space-y-6">
+              
+              <h3 class="text-xl font-bold font-display text-white">Direct Transmission</h3>
+              <p class="text-sm text-slate-300 leading-relaxed">
+                I am eager to contribute to collaborative engineering teams, build robust backend systems, and push forward intelligent AI agent integrations.
+              </p>
+
+              <div class="space-y-4 pt-2">
+                <!-- Email Item with Copy Button -->
+                <div class="flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 group">
+                  <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-10 h-10 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center shrink-0">
+                      <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="truncate">
+                      <div class="text-[11px] text-slate-400 font-mono">Email Address</div>
+                      <a href="mailto:gowripriyagaddam@gmail.com" class="text-xs sm:text-sm text-white font-mono hover:text-cyan-400 transition-colors truncate block">
+                        gowripriyagaddam@gmail.com
+                      </a>
+                    </div>
+                  </div>
+                  <button onclick="copyEmailToClipboard()" class="p-2.5 rounded-lg bg-white/5 hover:bg-white/15 text-slate-300 hover:text-cyan-300 transition-colors" title="Copy to clipboard">
+                    <i class="fa-regular fa-copy" id="copy-btn-icon"></i>
+                  </button>
+                </div>
+
+                <!-- Location Item -->
+                <div class="flex items-center gap-3 p-3.5 rounded-xl bg-white/5 border border-white/10">
+                  <div class="w-10 h-10 rounded-lg bg-cyan-600/20 text-cyan-400 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-location-dot"></i>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-slate-400 font-mono">Location</div>
+                    <div class="text-xs sm:text-sm text-white font-mono">Madanapalle / Bangalore, India</div>
+                  </div>
+                </div>
+
+                <!-- GitHub Profile -->
+                <a href="https://github.com/gowripriya521" target="_blank" rel="noopener noreferrer" 
+                   class="flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-purple-400/50 hover:bg-purple-950/20 transition-all group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-white/10 text-white flex items-center justify-center shrink-0">
+                      <i class="fab fa-github text-lg"></i>
+                    </div>
+                    <div>
+                      <div class="text-[11px] text-slate-400 font-mono">GitHub Profile</div>
+                      <div class="text-xs sm:text-sm text-white font-mono">github.com/gowripriya521</div>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-cyan-400 transition-colors"></i>
+                </a>
+
+                <!-- LinkedIn Profile -->
+                <a href="https://www.linkedin.com/in/gaddamgowripriya/" target="_blank" rel="noopener noreferrer" 
+                   class="flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400/50 hover:bg-cyan-950/20 transition-all group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-600/20 text-cyan-400 flex items-center justify-center shrink-0">
+                      <i class="fab fa-linkedin-in text-lg"></i>
+                    </div>
+                    <div>
+                      <div class="text-[11px] text-slate-400 font-mono">LinkedIn Profile</div>
+                      <div class="text-xs sm:text-sm text-white font-mono">in/gaddamgowripriya</div>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 group-hover:text-purple-400 transition-colors"></i>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Working Interactive Email Form -->
+          <div class="lg:col-span-7">
+            <div class="glass-panel p-8 rounded-2xl relative">
+              <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div class="space-y-2">
+                    <label class="text-xs font-mono text-slate-300">YOUR NAME *</label>
+                    <input type="text" id="sender-name" required placeholder="e.g. Alex Morgan" 
+                           class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors text-sm font-sans" />
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-xs font-mono text-slate-300">EMAIL ADDRESS *</label>
+                    <input type="email" id="sender-email" required placeholder="alex@company.com" 
+                           class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-purple-400 transition-colors text-sm font-sans" />
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-xs font-mono text-slate-300">SUBJECT / PURPOSE</label>
+                  <input type="text" id="sender-subject" placeholder="Full-Time Opportunity / Backend Project" 
+                         class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors text-sm font-sans" />
+                </div>
+
+                <div class="space-y-2">
+                  <label class="text-xs font-mono text-slate-300">MESSAGE *</label>
+                  <textarea id="sender-message" rows="5" required placeholder="Hi Gowri Priya, we would love to connect with you regarding..." 
+                            class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-purple-400 transition-colors text-sm font-sans resize-none"></textarea>
+                </div>
+
+                <button type="submit" 
+                        class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-semibold text-sm tracking-wide shadow-lg shadow-purple-600/25 transition-all duration-300 hover:shadow-cyan-500/30 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-paper-plane text-xs"></i>
+                  <span>Send Direct Message</span>
+                </button>
+
+              </form>
+
+              <!-- Success Notification Alert -->
+              <div id="form-feedback" class="hidden mt-4 p-4 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-xs sm:text-sm font-mono flex items-center gap-3">
+                <i class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+                <div>
+                  <div class="font-bold">Transmission Prepared!</div>
+                  <div class="text-emerald-300/80 text-[11px] font-sans">Connecting with your default email application to deliver your message to Gowri Priya.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 bg-[#040406] py-12 px-4 sm:px-6 lg:px-8 relative z-20">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center font-display font-extrabold text-xs text-white">
+            GP
+          </div>
+          <span class="text-sm font-display font-bold text-white">Gaddam Gowri Priya</span>
+          <span class="text-slate-500 text-xs">|</span>
+          <span class="text-xs text-slate-400 font-mono">Full-Stack & AI Builder</span>
+        </div>
+
+        <div class="flex items-center gap-6 text-sm text-slate-400">
+          <a href="#about" class="hover:text-cyan-400 transition-colors">About</a>
+          <a href="#skills" class="hover:text-cyan-400 transition-colors">Skills</a>
+          <a href="#projects" class="hover:text-cyan-400 transition-colors">Projects</a>
+          <a href="#focus" class="hover:text-cyan-400 transition-colors">Focus</a>
+          <a href="#contact" class="hover:text-cyan-400 transition-colors">Contact</a>
+        </div>
+
+        <div class="text-xs text-slate-500 font-mono">
+          &copy; <span id="current-year">2026</span> Gaddam Gowri Priya &bull; Clean Architecture
+        </div>
+
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- RESUME MODAL -->
+  <div id="resume-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel bg-[#090a14] border border-white/15 max-w-lg w-full rounded-2xl p-6 space-y-6 relative animate-float-slow">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-file-lines text-cyan-400"></i>
+          <h3 class="font-display font-bold text-lg text-white">Curriculum Vitae</h3>
+        </div>
+        <button onclick="closeResumeModal()" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs font-mono text-slate-300">
+        <div class="p-4 rounded-xl bg-black/60 border border-white/5 space-y-2">
+          <div class="text-purple-400 font-bold text-sm">Gaddam Gowri Priya</div>
+          <div class="text-slate-400">Full-Stack & AI Application Developer</div>
+          <div class="text-slate-400">B.Tech &bull; Python, FastAPI, Pydantic AI, SQL</div>
+          <div class="text-cyan-400">gowripriyagaddam@gmail.com</div>
+        </div>
+
+        <p class="text-slate-400 text-xs leading-relaxed font-sans">
+          To review my full technical credentials or request an updated PDF copy for recruitment, choose an option below:
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <a href="mailto:gowripriyagaddam@gmail.com?subject=Resume%20Request%20-%20Gaddam%20Gowri%20Priya" 
+           class="flex-1 py-3 text-center rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs font-mono transition-colors">
+          <i class="fa-solid fa-envelope mr-1.5"></i> Request via Email
+        </a>
+        <a href="https://www.linkedin.com/in/gaddamgowripriya/" target="_blank" 
+           class="flex-1 py-3 text-center rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs font-mono transition-colors">
+          <i class="fa-brands fa-linkedin-in mr-1.5"></i> View LinkedIn CV
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROJECT ARCHITECTURE MODAL -->
+  <div id="project-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel bg-[#090a14] border border-white/15 max-w-xl w-full rounded-2xl p-6 sm:p-8 space-y-6 relative max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <h3 id="modal-project-title" class="font-display font-bold text-xl text-white">Architecture Details</h3>
+        <button onclick="closeProjectModal()" class="text-slate-400 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="modal-project-content" class="space-y-4 text-sm text-slate-300">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+        <a id="modal-project-github" href="https://github.com/gowripriya521" target="_blank" 
+           class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs font-mono transition-colors flex items-center gap-2">
+          <i class="fab fa-github"></i> View GitHub Repo
+        </a>
+        <button onclick="closeProjectModal()" 
+                class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 font-medium text-xs font-mono transition-colors">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-banner" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="glass-panel bg-[#090a14] border border-cyan-400/40 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+      <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+      <span id="toast-banner-msg" class="text-xs font-mono text-cyan-200">Email copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // 1. Dynamic Typewriter Subtitles
+    const subtitles = [
+      "Python Developer",
+      "Backend Developer",
+      "AI Application Developer",
+      "FastAPI Developer"
+    ];
+    let wordIdx = 0;
+    let charIdx = 0;
+    let deleting = false;
+    const typewriterElem = document.getElementById("typewriter-output");
+
+    function handleTypewriter() {
+      const activeWord = subtitles[wordIdx];
+      if (deleting) {
+        typewriterElem.textContent = activeWord.substring(0, charIdx - 1);
+        charIdx--;
+      } else {
+        typewriterElem.textContent = activeWord.substring(0, charIdx + 1);
+        charIdx++;
+      }
+
+      let speed = deleting ? 45 : 95;
+
+      if (!deleting && charIdx === activeWord.length) {
+        speed = 2200;
+        deleting = true;
+      } else if (deleting && charIdx === 0) {
+        deleting = false;
+        wordIdx = (wordIdx + 1) % subtitles.length;
+        speed = 350;
+      }
+
+      setTimeout(handleTypewriter, speed);
+    }
+
+    // 2. Interactive Constellation Canvas
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function setupCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    setupCanvas();
+    window.addEventListener('resize', setupCanvas);
+
+    class ParticleNode {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 1.5 + 0.5;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.color = Math.random() > 0.5 ? 'rgba(139, 92, 246, ' : 'rgba(34, 211, 238, ';
+        this.opacity = Math.random() * 0.45 + 0.15;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = canvas.width;
+        else if (this.x > canvas.width) this.x = 0;
+        if (this.y < 0) this.y = canvas.height;
+        else if (this.y > canvas.height) this.y = 0;
+      }
+      draw() {
+        ctx.fillStyle = this.color + this.opacity + ')';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initNetwork() {
+      particles = [];
+      const count = Math.floor((canvas.width * canvas.height) / 19000);
+      for (let i = 0; i < count; i++) {
+        particles.push(new ParticleNode());
+      }
+    }
+
+    function linkNetwork() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            const alpha = 1 - (dist / 110);
+            ctx.strokeStyle = `rgba(139, 92, 246, ${alpha * 0.14})`;
+            ctx.lineWidth = 0.6;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function loopCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      linkNetwork();
+      requestAnimationFrame(loopCanvas);
+    }
+
+    // 3. Mobile Navigation Menu Toggle
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    mobileToggle.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.toggle('hidden');
+      if (!isHidden) {
+        menuIcon.classList.remove('fa-bars');
+        menuIcon.classList.add('fa-xmark');
+      } else {
+        menuIcon.classList.remove('fa-xmark');
+        menuIcon.classList.add('fa-bars');
+      }
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuIcon.classList.remove('fa-xmark');
+        menuIcon.classList.add('fa-bars');
+      });
+    });
+
+    // 4. Modals & Toast Utility
+    const resumeModal = document.getElementById('resume-modal');
+    const projectModal = document.getElementById('project-modal');
+    const toastBanner = document.getElementById('toast-banner');
+    const toastBannerMsg = document.getElementById('toast-banner-msg');
+
+    function notify(msg) {
+      toastBannerMsg.textContent = msg;
+      toastBanner.classList.remove('translate-y-24', 'opacity-0');
+      toastBanner.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toastBanner.classList.add('translate-y-24', 'opacity-0');
+        toastBanner.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    function openResumeModal() {
+      resumeModal.classList.remove('hidden');
+    }
+    function closeResumeModal() {
+      resumeModal.classList.add('hidden');
+    }
+
+    const architectureData = {
+      agent: {
+        title: "Pydantic AI Autonomous Agent Architecture",
+        content: `
+          <p>This architecture demonstrates autonomous task execution using Pydantic AI with schema-enforced tool execution.</p>
+          <div class="space-y-2 pt-2">
+            <h4 class="font-bold text-white text-xs font-mono uppercase tracking-wider">Engineering Highlights:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300">
+              <li>Structured output modeling with zero hallucination via Pydantic response models.</li>
+              <li>Registered external tool callers capable of web inspection, live API query, and calculations.</li>
+              <li>Async execution loop yielding sub-second reasoning responses.</li>
+            </ul>
+          </div>
+          <div class="pt-2 text-xs font-mono text-purple-400">
+            Stack: FastAPI &bull; Pydantic AI &bull; Python 3.12 &bull; Tool Calling &bull; REST API
+          </div>
+        `
+      },
+      fastapi: {
+        title: "FastAPI High-Performance Backend Architecture",
+        content: `
+          <p>A production-ready microservice backend demonstrating efficient database interactions, CRUD abstractions, and worker queue synchronization.</p>
+          <div class="space-y-2 pt-2">
+            <h4 class="font-bold text-white text-xs font-mono uppercase tracking-wider">Engineering Highlights:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300">
+              <li>Robust PostgreSQL schema modeling with SQLAlchemy ORM and schema migration routines.</li>
+              <li>Dependency injection and input validation via Pydantic models.</li>
+              <li>Automated input validation, error handling middleware, and comprehensive unit tests.</li>
+            </ul>
+          </div>
+          <div class="pt-2 text-xs font-mono text-cyan-400">
+            Stack: FastAPI &bull; PostgreSQL &bull; SQL &bull; Pydantic &bull; RESTful API
+          </div>
+        `
+      },
+      pipeline: {
+        title: "Full-Stack Task & Celery Pipeline Architecture",
+        content: `
+          <p>An end-to-end task operations portal demonstrating background distributed execution using Celery, linked with a responsive vanilla JS frontend.</p>
+          <div class="space-y-2 pt-2">
+            <h4 class="font-bold text-white text-xs font-mono uppercase tracking-wider">Engineering Highlights:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300">
+              <li>Responsive user interface built with semantic HTML5, modern CSS3, and JavaScript.</li>
+              <li>Decoupled asynchronous worker jobs with Celery for heavy tasks.</li>
+              <li>Structured REST endpoints with status feedback and input sanitization.</li>
+            </ul>
+          </div>
+          <div class="pt-2 text-xs font-mono text-indigo-400">
+            Stack: Python &bull; Celery &bull; Redis &bull; JavaScript &bull; HTML5/CSS3
+          </div>
+        `
+      }
+    };
+
+    function openProjectModal(key) {
+      const data = architectureData[key];
+      if (!data) return;
+      document.getElementById('modal-project-title').textContent = data.title;
+      document.getElementById('modal-project-content').innerHTML = data.content;
+      projectModal.classList.remove('hidden');
+    }
+    function closeProjectModal() {
+      projectModal.classList.add('hidden');
+    }
+
+    // 5. Copy Email
+    function copyEmailToClipboard() {
+      const email = 'gowripriyagaddam@gmail.com';
+      const input = document.createElement('textarea');
+      input.value = email;
+      document.body.appendChild(input);
+      input.select();
+      try {
+        document.execCommand('copy');
+        notify('Copied: ' + email);
+        const icon = document.getElementById('copy-btn-icon');
+        icon.classList.remove('fa-copy');
+        icon.classList.add('fa-check');
+        setTimeout(() => {
+          icon.classList.remove('fa-check');
+          icon.classList.add('fa-copy');
+        }, 2000);
+      } catch (e) {
+        notify('Failed to copy');
+      }
+      document.body.removeChild(input);
+    }
+
+    // 6. Interactive Contact Form Handler
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('sender-name').value;
+      const email = document.getElementById('sender-email').value;
+      const subject = document.getElementById('sender-subject').value || 'Portfolio Contact Inquiry';
+      const message = document.getElementById('sender-message').value;
+
+      const feedback = document.getElementById('form-feedback');
+      feedback.classList.remove('hidden');
+
+      const mailtoUrl = `mailto:gowripriyagaddam@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent("Sender Name: " + name + "\nSender Email: " + email + "\n\nMessage:\n" + message)}`;
+
+      setTimeout(() => {
+        window.location.href = mailtoUrl;
+      }, 1000);
+
+      notify('Preparing message transmission...');
+    }
+
+    // Close Modals
+    window.addEventListener('click', (e) => {
+      if (e.target === resumeModal) closeResumeModal();
+      if (e.target === projectModal) closeProjectModal();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeResumeModal();
+        closeProjectModal();
+      }
+    });
+
+    // 7. Dynamic Footer Year & Init
+    window.onload = function() {
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+      handleTypewriter();
+      initNetwork();
+      loopCanvas();
+    };
+  </script>
+</body>
+</html>
