@@ -46,6 +46,38 @@
             emerald: {
               400: '#34d399',
               500: '#10b981'
+            },
+            neon: {
+              cyan: '#00f2fe',
+              blue: '#4facfe',
+              purple: '#b026ff',
+              emerald: '#00f5a0'
+            }
+          },
+          animation: {
+            'radar-spin': 'radarSpin 12s linear infinite',
+            'radar-rev': 'radarRev 9s linear infinite',
+            'laser-scan': 'laserSweep 3.5s ease-in-out infinite',
+            'pulse-glow': 'pulseAmbient 4s ease-in-out infinite',
+            'eq-1': 'eqPulse 0.8s ease-in-out infinite alternate',
+            'eq-2': 'eqPulse 1.2s ease-in-out infinite 0.2s alternate',
+            'eq-3': 'eqPulse 0.6s ease-in-out infinite 0.4s alternate',
+            'eq-4': 'eqPulse 1.0s ease-in-out infinite 0.1s alternate'
+          },
+          keyframes: {
+            radarSpin: { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } },
+            radarRev: { '0%': { transform: 'rotate(360deg)' }, '100%': { transform: 'rotate(0deg)' } },
+            laserSweep: {
+              '0%, 100%': { transform: 'translateY(-110%)', opacity: '0.2' },
+              '50%': { transform: 'translateY(110%)', opacity: '0.9' }
+            },
+            pulseAmbient: {
+              '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+              '50%': { opacity: '0.7', transform: 'scale(1.1)' }
+            },
+            eqPulse: {
+              '0%': { height: '4px' },
+              '100%': { height: '22px' }
             }
           }
         }
@@ -84,6 +116,29 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
+    /* Animated holographic profile photo */
+    .holo-container { perspective: 1200px; }
+    .holo-card {
+      transform-style: preserve-3d;
+      transition: transform 0.12s ease-out;
+    }
+    .holo-depth-30 { transform: translateZ(30px); }
+    .hud-corner {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: #00f2fe;
+      z-index: 25;
+      pointer-events: none;
+    }
+    .hud-tl { top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid; }
+    .hud-tr { top: 6px; right: 6px; border-top: 2px solid; border-right: 2px solid; }
+    .hud-bl { bottom: 6px; left: 6px; border-bottom: 2px solid; border-left: 2px solid; }
+    .hud-br { bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid; }
+    .filter-cyber { filter: contrast(110%) brightness(105%) hue-rotate(5deg); }
+    .filter-matrix { filter: contrast(120%) hue-rotate(85deg) brightness(110%); }
+    .filter-noir { filter: grayscale(100%) contrast(140%) brightness(90%); }
 
     #ambient-canvas {
       position: fixed;
@@ -227,27 +282,80 @@
           </div>
         </div>
 
-        <!-- Right Hero Column: YOUR PROFILE PHOTO -->
-        <div class="lg:col-span-5 relative flex justify-center items-center">
-          <div class="absolute -inset-3 bg-gradient-to-r from-cyan-500/25 via-purple-600/25 to-pink-500/25 rounded-3xl blur-2xl opacity-70"></div>
+        <!-- Right Hero Column: ANIMATED HOLOGRAPHIC PROFILE PHOTO -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center holo-container py-4">
+          <div class="relative w-full max-w-[340px]">
+            <!-- Rotating radar rings -->
+            <div class="absolute -inset-6 rounded-full border border-dashed border-neon-cyan/20 animate-radar-spin pointer-events-none"></div>
+            <div class="absolute -inset-10 rounded-full border border-dotted border-neon-purple/20 animate-radar-rev pointer-events-none"></div>
 
-          <div class="relative w-full max-w-sm rounded-2xl glass-panel border border-white/20 p-4 overflow-hidden shadow-2xl group">
-            <div class="relative w-full aspect-square rounded-xl overflow-hidden bg-[#07070d]">
-              <!-- Your Uploaded Photo -->
-              <img 
-                src="profile.jpg" 
-                alt="Gaddam Gowri Priya" 
-                onerror="this.onerror=null; this.src='profile.png';"
-                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-[#050508] via-transparent to-transparent"></div>
-              
-              <div class="absolute bottom-3 left-3 right-3 p-3 glass-panel rounded-lg border border-white/10">
-                <p class="text-xs font-mono text-cyan-400 flex items-center gap-1.5">
-                  <i class="fa-solid fa-location-dot"></i> Madanapalle / Bangalore, India
-                </p>
-                <p class="text-xs text-white font-medium mt-0.5">B.Tech · Full-Stack & AI Builder</p>
+            <!-- Animated glow -->
+            <div class="absolute inset-0 bg-gradient-to-tr from-neon-cyan/30 via-neon-purple/30 to-neon-blue/30 rounded-3xl blur-2xl animate-pulse-glow"></div>
+
+            <!-- Floating technology labels -->
+            <div class="absolute -top-4 -left-6 z-30 px-3 py-1.5 rounded-xl glass-panel border border-neon-cyan/40 text-neon-cyan text-[11px] font-mono shadow-lg flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-neon-cyan animate-ping"></span>
+              <span>FastAPI // Online</span>
+            </div>
+            <div class="absolute -bottom-4 -right-6 z-30 px-3 py-1.5 rounded-xl glass-panel border border-neon-purple/40 text-neon-purple text-[11px] font-mono shadow-lg flex items-center gap-1.5">
+              <i class="fa-solid fa-brain"></i>
+              <span>Pydantic AI</span>
+            </div>
+
+            <!-- 3D mouse-responsive photo card -->
+            <div id="holo-card" class="holo-card relative rounded-2xl p-2.5 glass-panel border border-white/20 shadow-2xl overflow-hidden cursor-crosshair">
+              <div class="hud-corner hud-tl"></div>
+              <div class="hud-corner hud-tr"></div>
+              <div class="hud-corner hud-bl"></div>
+              <div class="hud-corner hud-br"></div>
+
+              <div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-[#07070f]">
+                <img
+                  id="target-portrait"
+                  src="profile.jpg"
+                  alt="Gaddam Gowri Priya"
+                  onerror="this.onerror=null; this.src='profile.png';"
+                  class="w-full h-full object-cover object-top filter-cyber transition-all duration-500"
+                />
+
+                <!-- Moving laser scan -->
+                <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-neon-cyan to-transparent shadow-[0_0_18px_#00f2fe] animate-laser-scan pointer-events-none"></div>
+
+                <!-- HUD labels -->
+                <div class="absolute top-3 left-3 text-[9px] font-mono text-neon-cyan/80 bg-black/50 px-2 py-0.5 rounded border border-neon-cyan/20">
+                  PROFILE // GP-521
+                </div>
+                <div class="absolute top-3 right-3 text-[9px] font-mono text-neon-purple/90 bg-black/50 px-2 py-0.5 rounded border border-neon-purple/20">
+                  INDIA
+                </div>
+
+                <!-- Animated equalizer -->
+                <div class="absolute bottom-20 right-3 flex items-end gap-1 p-1.5 rounded-md bg-black/50 border border-white/10">
+                  <div class="w-1 bg-neon-cyan rounded-full animate-eq-1"></div>
+                  <div class="w-1 bg-neon-blue rounded-full animate-eq-2"></div>
+                  <div class="w-1 bg-neon-purple rounded-full animate-eq-3"></div>
+                  <div class="w-1 bg-neon-emerald rounded-full animate-eq-4"></div>
+                </div>
+
+                <!-- Profile information -->
+                <div class="absolute bottom-2.5 left-2.5 right-2.5 p-3 glass-panel rounded-lg border border-white/15 holo-depth-30">
+                  <div class="flex items-center justify-between text-xs font-mono">
+                    <span class="text-white font-bold tracking-wide">Gowri Priya</span>
+                    <span class="text-[10px] text-emerald-300 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">AI DEVELOPER</span>
+                  </div>
+                  <p class="text-[10px] font-mono text-slate-400 mt-0.5 flex items-center gap-1">
+                    <i class="fa-solid fa-location-dot text-neon-cyan"></i> Madanapalle / Bangalore, India
+                  </p>
+                </div>
               </div>
+            </div>
+
+            <!-- Photo filter controls -->
+            <div class="flex items-center justify-center gap-2 mt-4 font-mono text-[10px]">
+              <span class="text-slate-400 uppercase tracking-widest text-[9px]">Photo Filter:</span>
+              <button type="button" onclick="setProfileFilter('filter-cyber')" class="px-2.5 py-1 rounded bg-white/5 border border-neon-cyan/40 text-neon-cyan hover:bg-neon-cyan/10">Cyber</button>
+              <button type="button" onclick="setProfileFilter('filter-matrix')" class="px-2.5 py-1 rounded bg-white/5 border border-neon-emerald/40 text-neon-emerald hover:bg-neon-emerald/10">Matrix</button>
+              <button type="button" onclick="setProfileFilter('filter-noir')" class="px-2.5 py-1 rounded bg-white/5 border border-slate-500 text-slate-300 hover:bg-white/10">Noir</button>
             </div>
           </div>
         </div>
@@ -765,6 +873,34 @@
 
   <!-- Interactive Scripts -->
   <script>
+    // 3D mouse-parallax interaction for the profile photo
+    const holoCard = document.getElementById('holo-card');
+    if (holoCard) {
+      holoCard.addEventListener('mousemove', (event) => {
+        const rect = holoCard.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -16;
+        const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 16;
+        holoCard.style.transform =
+          `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+      });
+
+      holoCard.addEventListener('mouseleave', () => {
+        holoCard.style.transform =
+          'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    }
+
+    // Change the profile photo filter
+    function setProfileFilter(className) {
+      const portrait = document.getElementById('target-portrait');
+      if (portrait) {
+        portrait.className =
+          `w-full h-full object-cover object-top transition-all duration-500 ${className}`;
+      }
+    }
+
     // Rotating Dynamic Typewriter
     const titles = [
       "Python Developer",
